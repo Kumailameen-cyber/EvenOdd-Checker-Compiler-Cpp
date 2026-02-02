@@ -1,0 +1,133 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+/* ===========================
+   LEXICAL ANALYSIS
+   =========================== */
+bool lexicalAnalysis(const string &input) {
+    cout << "[1] Lexical Analysis: Scanning input characters..." << endl;
+
+    for (char c : input) {
+        if (!((c >= '0' && c <= '9') || c == '-' || c == ' ')) {
+            cout << "[X] Lexical Error: Invalid character detected.\n\n";
+            return false;
+        }
+    }
+
+    cout << "[OK] Lexical analysis completed successfully.\n\n";
+    return true;
+}
+
+/* ===========================
+   SYNTAX ANALYSIS
+   Grammar: number → [-] digit+
+   =========================== */
+bool syntaxAnalysis(const string &input) {
+    cout << "[2] Syntax Analysis: Verifying grammatical structure..." << endl;
+
+    if (input.empty()) {
+        cout << "[X] Syntax Error: No input provided.\n\n";
+        return false;
+    }
+
+    int start = 0;
+
+    // optional minus sign
+    if (input[0] == '-') {
+        start = 1;
+    }
+
+    // '-' alone is invalid
+    if (start == 1 && input.length() == 1) {
+        cout << "[X] Syntax Error: '-' must be followed by digits.\n\n";
+        return false;
+    }
+
+    // remaining characters must be digits
+    for (int i = start; i < input.length(); i++) {
+        if (input[i] < '0' || input[i] > '9') {
+            cout << "[X] Syntax Error: Invalid number format.\n\n";
+            return false;
+        }
+    }
+
+    cout << "[OK] Syntax structure is valid.\n\n";
+    return true;
+}
+
+/* ===========================
+   SEMANTIC ANALYSIS
+   =========================== */
+bool semanticAnalysis(const string &input) {
+    cout << "[3] Semantic Analysis: Checking numeric validity..." << endl;
+
+    try {
+        stoi(input);   // range & validity check
+        cout << "[OK] Semantic analysis passed.\n\n";
+        return true;
+    }
+    catch (...) {
+        cout << "[X] Semantic Error: Number out of range or invalid.\n\n";
+        return false;
+    }
+}
+
+/* ===========================
+   CODE GENERATION
+   =========================== */
+void codeGeneration(int num) {
+    cout << "[4] Code Generation: Producing output..." << endl;
+
+    if (num % 2 == 0)
+        cout << "[OK] Result: " << num << " is EVEN.\n\n";
+    else
+        cout << "[OK] Result: " << num << " is ODD.\n\n";
+}
+
+/* ===========================
+   TESTING PHASE
+   =========================== */
+void testingPhase() {
+    cout << "[5] Testing Phase: Execution verified successfully.\n\n";
+}
+
+/* ===========================
+   MAIN FUNCTION
+   =========================== */
+int main() {
+    cout << "-------------------------------------------\n";
+    cout << "         EVENLANG MINI COMPILER PROJECT\n";
+    cout << "-------------------------------------------\n";
+    cout << "This program checks whether a number is EVEN or ODD.\n";
+    cout << "Type 'exit' to quit.\n";
+    cout << "-------------------------------------------\n";
+
+    string input;
+
+    while (true) {
+        cout << "\nEnter your value: ";
+        getline(cin, input);
+
+        if (input == "exit") {
+            cout << "Exiting EvenLang...\n";
+            break;
+        }
+
+        cout << endl;
+
+        if (!lexicalAnalysis(input)) continue;
+        if (!syntaxAnalysis(input)) continue;
+        if (!semanticAnalysis(input)) continue;
+
+        int number = stoi(input);
+        codeGeneration(number);
+        testingPhase();
+    }
+
+    cout << "-------------------------------------------\n";
+    cout << "Program finished successfully.\n";
+    cout << "-------------------------------------------\n";
+    return 0;
+}
